@@ -7,6 +7,7 @@
 
 library(fs)
 library(readr)
+library(tidyverse)
 
 # This searches for the results files with filenames in the form of Results_ 
 # which includes Results_1.csv, Results_10.csv, etc. but excludes Results.csv
@@ -19,9 +20,12 @@ for (i in 1:length(results_list)) {
   # Read in the .csv file for simulation run i
   tmp<-read_csv(file=results_list[i], show_col_types = FALSE)
   
-  # Process the data for simulation run i
-  tmp_df <- data.frame(Run = i,
-                       tmp)
+  # Process the data for simulation run i and save only the final values
+  # at Years=100 to save disk space
+  tmp %>%
+    filter(Years==100) %>%
+    data.frame(Run = i, .) -> tmp_df
+  
   # Append the processed data for simulation run i to the study file. Note
   # appending this to the file versus a working data frame avoids the problem
   # of R running out of memory. Note that the if else is needed so that the 
@@ -35,4 +39,4 @@ for (i in 1:length(results_list)) {
 }
 
 # Clean up the drive by deleting the individual simulation study results
-file_delete(results_list)
+# file_delete(results_list)

@@ -65,10 +65,19 @@ for (i in 1:length(ES_vars)) {
   study_df[,ES_var_position] <- ES_norm
 }  
 
-# generate 10 rows of random parameters and initial conditions
-# for each scenario from a random uniform distribution +/- 50%
-# of the initial value
-k <- 10 * nrow(study_df) 
+# Generate p randomly sampled parameters for each of the n rows for a 
+# total of k simulations. Start with a p that is small ~10 to begin
+# and make sure the code runs, can be finished in less than the 
+# requested time limit and so on, generates results that can be plotted,
+# and so on. Then as a last step, increase the p value to 20, 50 and 100
+# if needed to check the sensitivity of the results to sampling 
+# error from the random distributions. Usually a value of p of 50 or 100
+# is more than sufficient with higher values only added to the 
+# the computation time without add much in the way of more stable
+# results.
+n <- nrow(study_df)
+p <- 10
+k <- n*p
 parms_init <- data.frame(
   "Initial Carrying Capacity" = 80 * runif(k, 0.5,1.5),      
   "Initial Max Crude Birth Rate" = 0.2 * runif(k, 0.5,1.5),               
@@ -77,8 +86,8 @@ parms_init <- data.frame(
   check.names = FALSE
 )
 
-# combine the random parameters and initial values with the
-# scenarios and then save to the study file
+# Combine the random parameters and initial values with the
+# scenarios and then save to the study file.
 parms_init %>%
   cbind(study_df) %>% 
   # Select all the variables except the total_sw for explorting
