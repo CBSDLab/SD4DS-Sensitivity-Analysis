@@ -3,3 +3,8 @@
 .RData
 .Ruserdata
 study_k10.csv
+Results_*.csv
+sens_study_results*.csv
+study_results.csv
+Template.csv
+Results.csv
